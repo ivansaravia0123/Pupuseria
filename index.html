@@ -50,7 +50,7 @@
 
         .menu-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* Dos columnas en celular */
+            grid-template-columns: repeat(2, 1fr);
             gap: 12px;
         }
 
@@ -100,7 +100,6 @@
 
         .qty-val { font-weight: 700; font-size: 1.1rem; width: 30px; text-align: center; }
 
-        /* Barra Inferior Fija */
         .order-bar {
             position: fixed;
             bottom: 0;
@@ -136,12 +135,10 @@
             border: none;
         }
 
-        /* Ajuste para pantallas muy pequeñas */
         @media (max-width: 350px) {
             .menu-grid { grid-template-columns: 1fr; }
         }
 
-        /* Espacio para que el contenido no quede oculto tras la barra */
         .spacer { height: 120px; }
     </style>
 </head>
@@ -176,7 +173,8 @@
         { id: 'que', nombre: 'Solo Queso', img: 'pupusas.png' },
         { id: 'ayo', nombre: 'Ayote', img: 'pupusas.png' },
         { id: 'lor', nombre: 'Loroco', img: 'pupusas.png' },
-        { id: 'pol', nombre: 'Pollo', img: 'pupusas.png' }
+        { id: 'pol', nombre: 'Pollo', img: 'pupusas.png' },
+        { id: 'loc', nombre: 'Locas', img: 'pupusas.png' }
     ];
 
     function init() {
@@ -221,7 +219,7 @@
     }
 
     function enviarPedido() {
-        const phone = "50374339656"; // <-- TU NÚMERO AQUÍ
+        const phone = "50374339656"; 
         let msg = "🍱 *NUEVO PEDIDO DIGITAL*\n--------------------------\n";
         let subtotal = 0;
         let count = 0;
@@ -247,5 +245,4 @@
 </script>
 
 </body>
-
 </html>
