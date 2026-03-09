@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pupusería Chalex El COCO | Pedidos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #e67e22;
+            --secondary: #27ae60;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --white: #ffffff;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: 'Lexend', sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        header {
+            background: var(--white);
+            padding: 25px 15px;
+            text-align: center;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            border-radius: 0 0 25px 25px;
+        }
+
+        header h1 { color: var(--primary); margin: 0; font-size: 1.5rem; text-transform: uppercase; letter-spacing: 1px; }
+        header p { margin: 5px 0 0; font-size: 0.9rem; color: #7f8c8d; }
+
+        .container { padding: 15px; max-width: 600px; margin: 0 auto; }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin: 25px 0 15px;
+            padding: 10px;
+            background: var(--primary);
+            color: white;
+            border-radius: 12px;
+            font-weight: 700;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* Dos columnas en celular */
+            gap: 12px;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.03);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card img {
+            width: 100%;
+            height: 110px;
+            object-fit: cover;
+        }
+
+        .card-content { padding: 12px; text-align: center; flex-grow: 1; }
+        .card-content h3 { margin: 0; font-size: 0.9rem; font-weight: 600; color: var(--dark); }
+        .card-content .price { color: var(--primary); font-weight: 700; font-size: 1rem; margin-top: 4px; }
+
+        .counter {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background: #f9f9f9;
+            border-top: 1px solid #eee;
+        }
+
+        .btn-qty {
+            width: 35px;
+            height: 35px;
+            border-radius: 10px;
+            border: none;
+            background: var(--white);
+            color: var(--primary);
+            font-size: 1.2rem;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+
+        .btn-qty.plus { background: var(--primary); color: var(--white); }
+
+        .qty-val { font-weight: 700; font-size: 1.1rem; width: 30px; text-align: center; }
+
+        /* Barra Inferior Fija */
+        .order-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--white);
+            padding: 20px;
+            box-shadow: 0 -10px 25px rgba(0,0,0,0.1);
+            z-index: 1000;
+            border-radius: 25px 25px 0 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .total-info { font-size: 1.1rem; margin-bottom: 12px; font-weight: 600; }
+        .total-info span { color: var(--primary); font-size: 1.4rem; }
+
+        .btn-whatsapp {
+            background: var(--secondary);
+            color: white;
+            text-decoration: none;
+            width: 100%;
+            max-width: 350px;
+            padding: 16px;
+            border-radius: 15px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 1rem;
+            border: none;
+        }
+
+        /* Ajuste para pantallas muy pequeñas */
+        @media (max-width: 350px) {
+            .menu-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Espacio para que el contenido no quede oculto tras la barra */
+        .spacer { height: 120px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Pupusería "Chalex el COCO"</h1>
+    <p>Haz tu pedido y pasa recogiendo 🇸🇻</p>
+</header>
+
+<div class="container">
+    <div class="section-header">🌽 Pupusas de Maíz ($0.50)</div>
+    <div id="grid-maiz" class="menu-grid"></div>
+
+    <div class="section-header">🍚 Pupusas de Arroz ($0.50)</div>
+    <div id="grid-arroz" class="menu-grid"></div>
+    
+    <div class="spacer"></div>
+</div>
+
+<div class="order-bar">
+    <div class="total-info">Total Pedido: <span id="lbl-total">$0.00</span></div>
+    <button class="btn-whatsapp" onclick="enviarPedido()">
+        Pedir por WhatsApp
+    </button>
+</div>
+
+<script>
+    const menu = [
+        { id: 'chi', nombre: 'Chicharrón', img: 'pupusas.png' },
+        { id: 'rev', nombre: 'Frijol con Queso', img: 'pupusas.png' },
+        { id: 'que', nombre: 'Solo Queso', img: 'pupusas.png' },
+        { id: 'ayo', nombre: 'Ayote', img: 'pupusas.png' },
+        { id: 'lor', nombre: 'Loroco', img: 'pupusas.png' },
+        { id: 'pol', nombre: 'Pollo', img: 'pupusas.png' }
+    ];
+
+    function init() {
+        const maiz = document.getElementById('grid-maiz');
+        const arroz = document.getElementById('grid-arroz');
+
+        menu.forEach(item => {
+            maiz.innerHTML += crearTarjeta(item, 'm', 'Maíz');
+            arroz.innerHTML += crearTarjeta(item, 'a', 'Arroz');
+        });
+    }
+
+    function crearTarjeta(item, prefijo, tipo) {
+        const id = `${prefijo}-${item.id}`;
+        return `
+            <div class="card">
+                <img src="${item.img}" alt="${item.nombre}">
+                <div class="card-content">
+                    <h3>${item.nombre}</h3>
+                    <div class="price">$0.50</div>
+                </div>
+                <div class="counter">
+                    <button class="btn-qty" onclick="updateQty('${id}', -1)">-</button>
+                    <span id="qty-${id}" class="qty-val" data-name="${item.nombre} (${tipo})">0</span>
+                    <button class="btn-qty plus" onclick="updateQty('${id}', 1)">+</button>
+                </div>
+            </div>
+        `;
+    }
+
+    function updateQty(id, delta) {
+        const el = document.getElementById(`qty-${id}`);
+        let current = parseInt(el.innerText);
+        current = Math.max(0, current + delta);
+        el.innerText = current;
+        
+        let total = 0;
+        document.querySelectorAll('.qty-val').forEach(span => {
+            total += parseInt(span.innerText) * 0.50;
+        });
+        document.getElementById('lbl-total').innerText = `$${total.toFixed(2)}`;
+    }
+
+    function enviarPedido() {
+        const phone = "50374996213"; // <-- TU NÚMERO AQUÍ
+        let msg = "🍱 *NUEVO PEDIDO DIGITAL*\n--------------------------\n";
+        let subtotal = 0;
+        let count = 0;
+
+        document.querySelectorAll('.qty-val').forEach(span => {
+            let q = parseInt(span.innerText);
+            if(q > 0) {
+                msg += `✅ ${q} x ${span.dataset.name}\n`;
+                subtotal += q * 0.50;
+                count++;
+            }
+        });
+
+        if(count === 0) return alert("Por favor, selecciona algo del menú.");
+
+        msg += `--------------------------\n💰 *TOTAL A PAGAR: $${subtotal.toFixed(2)}*`;
+        
+        const url = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+        window.open(url, '_blank');
+    }
+
+    init();
+</script>
+
+</body>
+</html>
